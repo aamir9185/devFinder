@@ -1,5 +1,11 @@
-const express = require('express');
+import express from 'express';
 const authRouter = express.Router();
+import { validateData } from "../utils/validation.js";
+import { User } from "../models/User.js";
+import bcrypt from "bcrypt";
+import { userAuth } from "../middlewares/userAuth.js";
+
+
 
 authRouter.post("/signup", async (req, res) => {
   try {
@@ -25,12 +31,15 @@ authRouter.post("/signup", async (req, res) => {
       skills,
     });
 
+    console.log(user);
+
     // Save the new user to the database
     await user.save();
 
     res.status(201).send({ message: "User created successfully", user });
   } catch (error) {
     res.status(400).send({ message: error.message });
+    console.log(error)
   }
 });
 
@@ -53,5 +62,12 @@ authRouter.post("/login",async(req,res)=>{
   }
 })
 
+authRouter.post("/logout",userAuth,async(req,res)=>{
+  res.cookie("token",null,{
+    expires: new Date(Date.now()),
+  })
+  res.status(200).send({message:"User logged out successfully"})
+})
 
-module.exports = authRouter;
+
+export default authRouter;

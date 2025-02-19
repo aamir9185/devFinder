@@ -1,7 +1,7 @@
 import validator from "validator";
 import { User } from "../models/User.js"; // Make sure to import your User model
 
-export const validateData = async ({ bodya }) => {
+export const validateData = async ({ body }) => {
   const { firstName, lastName, email, password } = body;
 
   try {
@@ -49,3 +49,21 @@ export const validateData = async ({ bodya }) => {
     throw new Error(error.message);
   }
 };
+
+export const validateUpdate = (body) => {
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "email",
+    "age",
+    "gender",
+    "about",
+    "skills",
+    "photo"
+  ];
+
+  const isEditAllowed = Object.keys(body).every((field) => allowedFields.includes(field));
+
+  return isEditAllowed;
+};
+
