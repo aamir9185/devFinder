@@ -7,6 +7,7 @@ import { userAuth } from "./middlewares/userAuth.js";
 import authRouter from "./routes/auth.js";
 import profileRouter from "./routes/profile.js";
 import requestRouter from "./routes/request.js";
+import userRouter from "./routes/user.js"
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 
 // ✅ Middleware Debugging
 app.use((req, res, next) => {
