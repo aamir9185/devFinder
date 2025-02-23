@@ -55,6 +55,12 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        limit = limit > 50 ? 50 : limit;
+
+        const skip = (page - 1) * limit;
+
         const connections = await ConnectionRequest.find({
             $or: [
                 { fromUserId: loggedInUser._id },
@@ -73,7 +79,9 @@ userRouter.get("/feed", userAuth, async (req, res) => {
               {  _id: { $nin: Array.from(hideUserFromFeed) }},
                 {  _id: { $ne: loggedInUser._id }}
             ]
-        }).select("firstName lastName age gender about skills photo")
+        }).select("firstName lastName age gender about skills photo").
+        skip(skip).
+        limit(limit)
 
         res.status(200).json({
             message: "Feed fetched successfully",
